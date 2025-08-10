@@ -21,7 +21,7 @@ class LoginViewModel {
 
   bool get isLoggingIn => login.running;
   bool get isLoggedIn => login.completed;
-  bool get hasError => login.error;
+  bool get hasLogInError => login.error;
 
   Future<Result<void>> _login((String, String) credentials) async {
     final (email, password) = credentials;

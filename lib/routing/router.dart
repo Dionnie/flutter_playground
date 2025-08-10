@@ -10,6 +10,7 @@ import 'package:flutter_playground/views/home/home_screen.dart';
 import 'package:flutter_playground/views/home/home_viewmodel.dart';
 import 'package:flutter_playground/views/settings/settings_screen.dart';
 import 'package:flutter_playground/views/shop/shop_screen.dart';
+import 'package:flutter_playground/views/shop/shop_viewmodel.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../data/repositories/auth/auth_repository.dart';
@@ -53,7 +54,8 @@ GoRouter router(
         GoRoute(
           parentNavigatorKey: shellKey,
           path: '/shop',
-          builder: (_, __) => const ShopScreen(),
+          builder: (context, state) =>
+              ShopScreen(viewModel: ShopViewModel(repo: context.read())),
         ),
         GoRoute(
           parentNavigatorKey: shellKey,

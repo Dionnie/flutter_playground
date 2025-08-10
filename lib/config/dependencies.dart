@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter_playground/data/repositories/auth/auth_repository_dev.dart';
+import 'package:flutter_playground/data/repositories/counter/counter_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '../data/repositories/auth/auth_repository.dart';
@@ -26,5 +27,6 @@ List<SingleChildWidget> get providersLocal {
     ChangeNotifierProvider(
       create: (context) => AuthRepositoryDev() as AuthRepository,
     ),
+    ChangeNotifierProvider(create: (context) => FakeCounterRepository()),
   ];
 }
