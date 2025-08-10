@@ -42,10 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleLoginResult() {
-    if (widget.viewModel.login.completed) {
+    if (widget.viewModel.isLoggedIn) {
       widget.viewModel.login.clearResult();
       context.go(Routes.home);
-    } else if (widget.viewModel.login.error) {
+    } else if (widget.viewModel.hasLogInError) {
       widget.viewModel.login.clearResult();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
