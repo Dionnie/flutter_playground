@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_playground/config/dependencies.dart';
 import 'package:flutter_playground/views/app/app_screen.dart';
 import 'package:flutter_playground/views/auth/login_screen.dart';
 import 'package:flutter_playground/views/auth/login_viewmodel.dart';
@@ -44,7 +45,11 @@ GoRouter router(
 
     ShellRoute(
       navigatorKey: shellKey,
-      builder: (_, __, child) => AppScreen(child: child),
+      builder: (_, __, child) => MultiProvider(
+        providers: providersLocalWithAuth,
+
+        child: AppScreen(child: child),
+      ),
       routes: [
         GoRoute(
           parentNavigatorKey: shellKey,
@@ -54,8 +59,11 @@ GoRouter router(
         GoRoute(
           parentNavigatorKey: shellKey,
           path: '/shop',
-          builder: (context, state) =>
-              ShopScreen(viewModel: ShopViewModel(repo: context.read())),
+          builder: (context, state) {
+            final viewModel = context
+                .read<ShopViewModel>(); // gets existing instance from Provider
+            return ShopScreen(viewModel: viewModel);
+          },
         ),
         GoRoute(
           parentNavigatorKey: shellKey,
@@ -63,14 +71,6 @@ GoRouter router(
           builder: (_, __) => const SettingsScreen(),
         ),
       ],
-    ),
-
-    GoRoute(
-      path: Routes.home,
-      builder: (context, state) {
-        final viewModel = HomeViewModel();
-        return HomeScreen(viewModel: viewModel);
-      },
     ),
   ],
 );

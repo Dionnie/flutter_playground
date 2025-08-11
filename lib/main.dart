@@ -24,6 +24,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       scrollBehavior: AppCustomScrollBehavior(),
       theme: ThemeData(
+        brightness: Brightness.dark,
         pageTransitionsTheme: const PageTransitionsTheme(
           builders: {
             TargetPlatform.android: GoTransitions.fadeUpwards,
@@ -32,6 +33,7 @@ class MainApp extends StatelessWidget {
           },
         ),
         useMaterial3: false,
+
         colorSchemeSeed: Colors.green,
         inputDecorationTheme: InputDecorationTheme(
           border: OutlineInputBorder(),

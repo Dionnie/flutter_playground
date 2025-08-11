@@ -28,7 +28,7 @@ abstract class CommandStream<T> extends ChangeNotifier {
     if (_running) return;
 
     _running = true;
-    _latest = null;
+    //   _latest = null;
     notifyListeners();
 
     _subscription = stream.listen(

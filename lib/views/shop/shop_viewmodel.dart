@@ -1,12 +1,48 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_playground/data/repositories/counter/counter_repository.dart';
-import 'package:flutter_playground/utils/command_stream.dart';
+import 'package:flutter_playground/data/repositories/data_traffic/data_traffic_repository.dart';
 
 class ShopViewModel extends ChangeNotifier {
-  ShopViewModel({required FakeCounterRepository repo}) : _repo = repo {
-    counter = CommandStream0<int>(_repo.getCounterStream);
+  final DataTrafficRepository _repo;
+  late final StreamSubscription<int> _subscription;
+
+  int _currentCount = 0;
+  bool _isRunning = false;
+
+  int get currentCount => _currentCount;
+  bool get isRunning => _isRunning;
+
+  ShopViewModel({required DataTrafficRepository dataTrafficRepository})
+    : _repo = dataTrafficRepository {
+    // Subscribe to stream and update state
+    _subscription = _repo.trafficStream.listen((value) {
+      _currentCount = value;
+      notifyListeners();
+    });
   }
 
-  final FakeCounterRepository _repo;
-  late final CommandStream0<int> counter;
+  void start() {
+    _repo.start();
+    _isRunning = true;
+    notifyListeners();
+  }
+
+  void pause() {
+    _repo.pause();
+    _isRunning = false;
+    notifyListeners();
+  }
+
+  void reset() {
+    _repo.reset();
+    _isRunning = false;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    _repo.dispose();
+    super.dispose();
+  }
 }
