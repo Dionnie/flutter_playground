@@ -3,18 +3,11 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_playground/config/dependencies.dart';
 import 'package:flutter_playground/views/app/app_screen.dart';
-import 'package:flutter_playground/views/auth/login_screen.dart';
-import 'package:flutter_playground/views/auth/login_viewmodel.dart';
+import 'package:flutter_playground/features/auth/login_screen.dart';
 import 'package:flutter_playground/views/home/home_screen.dart';
-import 'package:flutter_playground/views/home/home_viewmodel.dart';
 import 'package:flutter_playground/views/settings/settings_screen.dart';
-import 'package:flutter_playground/views/shop/shop_screen.dart';
-import 'package:flutter_playground/views/shop/shop_viewmodel.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import '../data/repositories/auth/auth_repository.dart';
 import 'routes.dart';
 
 /// Top go_router entry point.
@@ -23,7 +16,7 @@ import 'routes.dart';
 /// to /login when the user logs out.
 
 GoRouter router(
-  AuthRepository authRepository,
+  // AuthRepository authRepository,
   GlobalKey<NavigatorState>? rootKey,
   GlobalKey<NavigatorState>? shellKey,
 ) => GoRouter(
@@ -31,40 +24,26 @@ GoRouter router(
   initialLocation: Routes.login,
   debugLogDiagnostics: true,
   //redirect: _redirect,
-  refreshListenable: authRepository,
+  // refreshListenable: authRepository,
   routes: [
     GoRoute(
       parentNavigatorKey: rootKey,
       path: Routes.login,
       builder: (context, state) {
-        return LoginScreen(
-          viewModel: LoginViewModel(authRepository: context.read()),
-        );
+        return LoginScreen();
       },
     ),
 
     ShellRoute(
       navigatorKey: shellKey,
-      builder: (_, __, child) => MultiProvider(
-        providers: providersLocalWithAuth,
-
-        child: AppScreen(child: child),
-      ),
+      builder: (_, __, child) => AppScreen(child: child),
       routes: [
         GoRoute(
           parentNavigatorKey: shellKey,
           path: '/',
-          builder: (_, __) => HomeScreen(viewModel: HomeViewModel()),
+          builder: (_, __) => HomeScreen(),
         ),
-        GoRoute(
-          parentNavigatorKey: shellKey,
-          path: '/shop',
-          builder: (context, state) {
-            final viewModel = context
-                .read<ShopViewModel>(); // gets existing instance from Provider
-            return ShopScreen(viewModel: viewModel);
-          },
-        ),
+
         GoRoute(
           parentNavigatorKey: shellKey,
           path: '/settings',
@@ -76,7 +55,7 @@ GoRouter router(
 );
 
 // From https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/redirection.dart
-Future<String?> _redirect(BuildContext context, GoRouterState state) async {
+/* Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   // if the user is not logged in, they need to login
   final loggedIn = await context.read<AuthRepository>().isAuthenticated;
   final loggingIn = state.matchedLocation == Routes.login;
@@ -93,3 +72,4 @@ Future<String?> _redirect(BuildContext context, GoRouterState state) async {
   // no need to redirect at all
   return null;
 }
+ */
