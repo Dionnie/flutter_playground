@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_playground/routing/router.dart';
 import 'package:flutter_playground/ui/core/scroll_behavior.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'main_development.dart' as development;
 
 void main() {
@@ -8,8 +9,9 @@ void main() {
 }
 
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  const MainApp({super.key, required this.container});
 
+  final ProviderContainer container;
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
@@ -24,7 +26,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       //  routerConfig: router(context.read(), rootKey, shellKey),
-      routerConfig: router(),
+      routerConfig: router(container),
     );
   }
 }

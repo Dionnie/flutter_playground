@@ -3,11 +3,13 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_playground/features/auth/viewmodel/auth_state_listener.dart';
 import 'package:flutter_playground/features/profile/profile_screen.dart';
 import 'package:flutter_playground/views/app/app_screen.dart';
 import 'package:flutter_playground/features/auth/login_screen.dart';
 import 'package:flutter_playground/views/home/home_screen.dart';
 import 'package:flutter_playground/views/settings/settings_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'routes.dart';
 
@@ -19,38 +21,54 @@ import 'routes.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-GoRouter router() => GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: Routes.login,
-  debugLogDiagnostics: true,
-  //redirect: _redirect,
-  // refreshListenable: authRepository,
-  routes: [
-    GoRoute(
-      parentNavigatorKey: _rootNavigatorKey,
-      path: Routes.login,
-      builder: (context, state) {
-        return LoginScreen();
-      },
-    ),
+GoRouter router(ProviderContainer container) {
+  final authListener = container.read(authStateListenerProvider);
+  return GoRouter(
+    navigatorKey: _rootNavigatorKey,
+    initialLocation: Routes.login,
+    debugLogDiagnostics: true,
+    refreshListenable: authListener.currentUser,
+    redirect: (context, state) {
+      final loggedIn = authListener.currentUser.value != null;
+      final loggingIn = state.matchedLocation == Routes.login;
+      if (!loggedIn) {
+        return loggingIn ? null : Routes.login;
+      }
+      if (loggedIn && loggingIn) {
+        return '/';
+      }
+      return null;
+    },
+    routes: [
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: Routes.login,
+        builder: (context, state) {
+          return LoginScreen();
+        },
+      ),
 
-    ShellRoute(
-      navigatorKey: _shellNavigatorKey,
-      builder: (_, __, child) => AppScreen(child: child),
-      routes: [
-        GoRoute(path: '/', builder: (_, __) => HomeScreen()),
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (_, __, child) => AppScreen(child: child),
+        routes: [
+          GoRoute(path: '/', builder: (_, __) => HomeScreen()),
 
-        GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
-      ],
-    ),
+          GoRoute(
+            path: '/settings',
+            builder: (_, __) => const SettingsScreen(),
+          ),
+        ],
+      ),
 
-    GoRoute(
-      parentNavigatorKey: _rootNavigatorKey,
-      path: '/profile',
-      builder: (context, state) => ProfileScreen(),
-    ),
-  ],
-);
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/profile',
+        builder: (context, state) => ProfileScreen(),
+      ),
+    ],
+  );
+}
 
 // From https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/redirection.dart
 /* Future<String?> _redirect(BuildContext context, GoRouterState state) async {

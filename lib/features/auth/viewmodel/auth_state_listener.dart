@@ -10,15 +10,12 @@ class AuthStateListener {
 
   final Ref ref;
 
-  // Expose the current user as a ValueNotifier
   final ValueNotifier<AppUser?> currentUser = ValueNotifier<AppUser?>(null);
 
   void _init() {
     ref.listen<AsyncValue<AppUser?>>(authUserProvider, (previous, next) {
       final user = next.value;
       debugPrint("HEY ${user?.email}");
-
-      // Update the ValueNotifier for UI or GoRouter
       currentUser.value = user;
     });
   }

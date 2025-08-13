@@ -9,13 +9,11 @@ class LocalAuthRepository implements AuthRepository {
 
   @override
   Future<void> login(String email, String password) async {
-    await Future.delayed(const Duration(milliseconds: 300));
     _controller.add(AppUser(id: "mock_id", email: email));
   }
 
   @override
   Future<void> logout() async {
-    await Future.delayed(const Duration(milliseconds: 200));
     _controller.add(null);
   }
 

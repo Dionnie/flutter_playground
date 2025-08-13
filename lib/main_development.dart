@@ -32,6 +32,9 @@ Future<void> main() async {
   // 3. Pass the container to an UncontrolledProviderScope and run the app
 
   runApp(
-    UncontrolledProviderScope(container: container, child: const MainApp()),
+    UncontrolledProviderScope(
+      container: container,
+      child: MainApp(container: container),
+    ),
   );
 }

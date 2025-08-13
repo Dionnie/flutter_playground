@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_playground/routing/routes.dart';
 import 'viewmodel/login_viewmodel.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -37,7 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     ref.listen(loginViewModelProvider, (previous, next) {
       next.whenOrNull(
         data: (_) {
-          context.go(Routes.home);
+          //   context.go(Routes.home);
         },
         error: (error, _) {
           ScaffoldMessenger.of(

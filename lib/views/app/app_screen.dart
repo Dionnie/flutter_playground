@@ -17,13 +17,25 @@ class _AppScreenState extends ConsumerState<AppScreen> {
   Widget build(BuildContext context) {
     final logoutController = ref.read(logoutViewModelProvider.notifier);
 
+    /*    ref.listen(logoutViewModelProvider, (previous, next) {
+      next.whenOrNull(
+        data: (_) {
+          context.go(Routes.login);
+        },
+        error: (error, _) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+      );
+    }); */
+
     return Scaffold(
       body: widget.child,
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
           await logoutController.logout();
-          // context.replace('/login');
         },
         label: Text('Outer Screen ${GoRouterState.of(context).uri.toString()}'),
         icon: const Icon(Icons.switch_access_shortcut_add_outlined),
