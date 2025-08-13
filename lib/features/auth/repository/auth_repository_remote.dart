@@ -25,7 +25,7 @@ class RemoteAuthRepository implements AuthRepository {
   }
 
   @override
-  Stream<AppUser?> authStateChanges() {
+  Stream<AppUser?> currentUserStream() {
     return _supabase.auth.onAuthStateChange.map((event) {
       final u = event.session?.user;
       return u == null ? null : AppUser(id: u.id, email: u.email);

@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_playground/features/profile/profile_screen.dart';
 import 'package:flutter_playground/views/app/app_screen.dart';
 import 'package:flutter_playground/features/auth/login_screen.dart';
 import 'package:flutter_playground/views/home/home_screen.dart';
@@ -15,19 +16,18 @@ import 'routes.dart';
 /// Listens to changes in [AuthTokenRepository] to redirect the user
 /// to /login when the user logs out.
 
-GoRouter router(
-  // AuthRepository authRepository,
-  GlobalKey<NavigatorState>? rootKey,
-  GlobalKey<NavigatorState>? shellKey,
-) => GoRouter(
-  navigatorKey: rootKey,
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+GoRouter router() => GoRouter(
+  navigatorKey: _rootNavigatorKey,
   initialLocation: Routes.login,
   debugLogDiagnostics: true,
   //redirect: _redirect,
   // refreshListenable: authRepository,
   routes: [
     GoRoute(
-      parentNavigatorKey: rootKey,
+      parentNavigatorKey: _rootNavigatorKey,
       path: Routes.login,
       builder: (context, state) {
         return LoginScreen();
@@ -35,21 +35,19 @@ GoRouter router(
     ),
 
     ShellRoute(
-      navigatorKey: shellKey,
+      navigatorKey: _shellNavigatorKey,
       builder: (_, __, child) => AppScreen(child: child),
       routes: [
-        GoRoute(
-          parentNavigatorKey: shellKey,
-          path: '/',
-          builder: (_, __) => HomeScreen(),
-        ),
+        GoRoute(path: '/', builder: (_, __) => HomeScreen()),
 
-        GoRoute(
-          parentNavigatorKey: shellKey,
-          path: '/settings',
-          builder: (_, __) => const SettingsScreen(),
-        ),
+        GoRoute(path: '/settings', builder: (_, __) => const SettingsScreen()),
       ],
+    ),
+
+    GoRoute(
+      parentNavigatorKey: _rootNavigatorKey,
+      path: '/profile',
+      builder: (context, state) => ProfileScreen(),
     ),
   ],
 );

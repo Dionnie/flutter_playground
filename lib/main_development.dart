@@ -3,12 +3,12 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_playground/features/auth/repository/auth_repository.dart';
-import 'package:flutter_playground/features/auth/repository/auth_repository_local.dart';
 import 'package:flutter_playground/common/shared_preference_provider.dart';
+import 'package:flutter_playground/features/auth/viewmodel/auth_state_listener.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'main.dart';
 
 /// Development config entry point.
@@ -23,14 +23,15 @@ Future<void> main() async {
 
   final sharedPreferences = await SharedPreferences.getInstance();
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(sharedPreferences),
-        authRepositoryProvider.overrideWithValue(LocalAuthRepository()),
-      ],
+  // 1. Create a ProviderContainer
+  final container = ProviderContainer(
+    overrides: [sharedPreferencesProvider.overrideWithValue(sharedPreferences)],
+  );
+  // 2. Use it to read the provider
+  container.read(authStateListenerProvider);
+  // 3. Pass the container to an UncontrolledProviderScope and run the app
 
-      child: const MainApp(),
-    ),
+  runApp(
+    UncontrolledProviderScope(container: container, child: const MainApp()),
   );
 }

@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_playground/features/auth/viewmodel/logout_viewmodel.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class AppScreen extends StatelessWidget {
+class AppScreen extends ConsumerStatefulWidget {
   const AppScreen({super.key, required this.child});
 
   final Widget child;
 
   @override
+  ConsumerState<AppScreen> createState() => _AppScreenState();
+}
+
+class _AppScreenState extends ConsumerState<AppScreen> {
+  @override
   Widget build(BuildContext context) {
+    final logoutController = ref.read(logoutViewModelProvider.notifier);
+
     return Scaffold(
-      body: child,
+      body: widget.child,
       floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          context.replace('/login');
+        onPressed: () async {
+          await logoutController.logout();
+          // context.replace('/login');
         },
         label: Text('Outer Screen ${GoRouterState.of(context).uri.toString()}'),
         icon: const Icon(Icons.switch_access_shortcut_add_outlined),
@@ -24,7 +34,6 @@ class AppScreen extends StatelessWidget {
           '/shop',
           '/settings',
         ].indexOf(GoRouterState.of(context).uri.toString()).clamp(0, 2),
-
         onTap: (value) {
           switch (value) {
             case 0:

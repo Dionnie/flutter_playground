@@ -12,9 +12,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rootKey = GlobalKey<NavigatorState>();
-    final shellKey = GlobalKey<NavigatorState>();
-
     return MaterialApp.router(
       scrollBehavior: AppCustomScrollBehavior(),
       theme: ThemeData(
@@ -27,7 +24,7 @@ class MainApp extends StatelessWidget {
         ),
       ),
       //  routerConfig: router(context.read(), rootKey, shellKey),
-      routerConfig: router(rootKey, shellKey),
+      routerConfig: router(),
     );
   }
 }

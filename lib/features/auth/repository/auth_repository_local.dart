@@ -9,18 +9,21 @@ class LocalAuthRepository implements AuthRepository {
 
   @override
   Future<void> login(String email, String password) async {
-    if (email == "email@example.com" && password == "password") {
-      _controller.add(AppUser(id: "mock_id", email: email));
-    } else {
-      throw Exception("Mock: Invalid credentials");
-    }
+    await Future.delayed(const Duration(milliseconds: 300));
+    _controller.add(AppUser(id: "mock_id", email: email));
   }
 
   @override
   Future<void> logout() async {
     await Future.delayed(const Duration(milliseconds: 200));
+    _controller.add(null);
   }
 
   @override
-  Stream<AppUser?> authStateChanges() => _controller.stream;
+  Stream<AppUser?> currentUserStream() => _controller.stream;
+
+  // Optional: dispose method to close the controller
+  void dispose() {
+    _controller.close();
+  }
 }
